@@ -60,6 +60,7 @@
                                     </div>
                                 </a>
                             </li>
+                            <!--
                             <li class="list-group-item">
                                 <a href="<?php echo URL::asset('magazzino/carico2/DDT') ?>" class="media">
                                     <div class="media-body">
@@ -84,6 +85,7 @@
                                     </div>
                                 </a>
                             </li>
+                            -->
                             <li class="list-group-item">
                                 <a href="<?php echo URL::asset('logout') ?>" class="media">
                                     <div class="media-body">

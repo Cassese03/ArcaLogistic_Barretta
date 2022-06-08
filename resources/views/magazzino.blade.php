@@ -270,6 +270,7 @@
                 </div>
 
                 <ul class="list-group">
+
                     <li class="list-group-item">
                         <a href="<?php echo URL::asset('magazzino/passivi') ?>" class="media">
                             <div class="media-body">

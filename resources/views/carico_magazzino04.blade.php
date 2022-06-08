@@ -336,7 +336,7 @@
 
 
 
-                    <div class="col-sm-6" style="margin-top:0px;">
+                    <div class="col-sm-12" style="margin-top:0px;text-align: center">
                         <ul class="list-group">
 
                             <?php foreach($documento->righe as $r){ $totale = 0; ?>
@@ -345,10 +345,10 @@
                                 <a href="#" onclick="" class="media">
                                     <div class="media-body">
                                         <div class="row">
-                                            <div class="col-xs-6 col-sm-6 col-md-6">
+                                            <div class="col-xs-12 col-sm-12 col-md-12">
                                                 <h5 <?php if($r->QtaEvadibile==0)echo 'style="color: red"'?>><?php echo $r->Cd_AR.' '.$r->Descrizione;?><br><?php echo 'Prezzo : '.round(floatval($r->PrezzoUnitarioV), 2);?> <br> Qta: <?php echo floatval($r->QtaEvadibile)?><?php /* echo  'Magazzino di Partenza: '.$r->Cd_MG_P;if($r->Cd_MGUbicazione_A != null) echo ' - '.$r->Cd_MGUbicazione_A;?><br><?php echo' Magazzino di Arrivo: '.$r->Cd_MG_A;?><br><?php if($r->Cd_ARLotto != Null)echo 'Lotto: '.$r->Cd_ARLotto;*/ ?></h5>
                                             </div>
-                                            <div class="col-xs-6 col-sm-6 col-md-6">
+                                            <div class="col-xs-12 col-sm-12 col-md-12">
 
                                                 <form  method="post" onsubmit="return confirm('Vuoi Eliminare Questa Riga ?')">
                                                     <button style="width:32%;" type="reset" name="segnalazione" value="" class="btn btn-warning btn-sm" onclick="$('#modal_segnalazione<?php echo $r->Id_DORig?>').modal('show');">

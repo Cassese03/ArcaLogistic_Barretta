@@ -628,75 +628,7 @@ class AjaxController extends Controller{
             </script>
         <?php }
     }
-    /*
-        public function evadi_documento($Id_DoTes,$Cd_DO,$magazzino_A){
 
-            $righe  = DB::SELECT('SELECT * FROM DoRig where Id_DoTes = \''.$Id_DoTes.'\'');
-            $cf     = DB::SELECT('SELECT * FROM DORIG WHERE Id_DoTes = \''.$Id_DoTes.'\' ')[0]->Cd_CF;
-
-                    $Id_DoTes1 = DB::table('DOTes')->insertGetId(['Cd_CF' => $cf, 'Cd_Do' => $Cd_DO]);
-
-            foreach($righe as $r) {
-
-                if ($r->QtaEvadibile > 0) {
-
-                    if ($r->Cd_MGUbicazione_P != NULL || $r->Cd_ARLotto != '0')
-                        $insert_evasione['Cd_MGUbicazione_P'] = $r->Cd_MGUbicazione_P;
-
-                    if( $Cd_DO == 'DTR' || $Cd_DO == 'DTG') {
-                        if ($r->Cd_MG_P != null || $r->Cd_ARLotto != '0')
-                            $insert_evasione['Cd_MG_P'] = $r->Cd_MG_P;
-                    }
-                    else
-                        $insert_evasione['Cd_MG_P'] = $r->Cd_MG_A;
-
-                    if ($r->Cd_ARLotto != null || $r->Cd_ARLotto != '0')
-                        $insert_evasione['Cd_ARLotto'] = $r->Cd_ARLotto;
-
-                    if ($r->Cd_MGUbicazione_A != NULL || $r->Cd_ARLotto != '0')
-                        $insert_evasione['Cd_MGUbicazione_A'] = $r->Cd_MGUbicazione_A;
-
-                    if( $Cd_DO == 'DTR' || $Cd_DO == 'DTG'){
-                        if ($r->Cd_MG_A != null || $r->Cd_ARLotto != '0')
-                            $insert_evasione['Cd_MG_A'] = $r->Cd_MG_A;
-                    }
-                    else
-                        $insert_evasione['Cd_MG_A'] = $magazzino_A;
-
-                    if ($r->Cd_ARLotto != null || $r->Cd_ARLotto != '0')
-                        $insert_evasione['Cd_ARLotto'] = $r->Cd_ARLotto;
-
-                    $insert_evasione['Qta'] = $r->QtaEvadibile;
-                    $insert_evasione['QtaEvadibile'] = $r->QtaEvadibile;
-                    $insert_evasione['QtaEvasa'] = $r->QtaEvadibile;
-                    $insert_evasione['Id_DoRig_Evade'] = $r->Id_DORig;
-                    $insert_evasione['Cd_AR'] = $r->Cd_AR;
-                    $insert_evasione['PrezzoUnitarioV'] = $r->PrezzoUnitarioV;
-                    $insert_evasione['Cd_Aliquota'] = $r->Cd_Aliquota;
-                    $insert_evasione['Cd_CGConto'] = $r->Cd_CGConto;
-                    $insert_evasione['Id_DoRig_Evade'] = $r->Id_DORig;
-
-                    $insert_evasione['Id_Dotes'] = $Id_DoTes1;
-                    DB::table('DoRig')->insertGetId($insert_evasione);
-
-                    $newId_DORIG = DB::SELECT('SELECT TOP 1 * FROM DORig ORDER BY Id_DORig DESC')[0]->Id_DORig;
-
-                    DB::update('Update dorig set QtaEvadibile = \'0\'   where Id_DoRig = \'' . $r->Id_DORig . '\' ');
-                    DB::update('Update dorig set Evasa = \'1\'   where Id_DoRig = \'' . $r->Id_DORig . '\' ');;
-
-                    DB::update("Update dotes set dotes.reserved_1= 'RRRRRRRRRR' where dotes.id_dotes = $Id_DoTes1");
-                    DB::statement("exec asp_DO_End $Id_DoTes1");
-
-                }
-
-
-            }
-            DB::update("Update dotes set dotes.reserved_1= 'RRRRRRRRRR' where dotes.id_dotes = '$Id_DoTes'");
-            DB::statement("exec asp_DO_End '$Id_DoTes'");
-            echo 'Le riga sono state completamente evase';
-        }
-
-    */
     public function evadi_articolo($Id_DoRig,$qtadaEvadere,$magazzino,$ubicazione,$lotto,$cd_cf,$documento,$cd_ar,$magazzino_A){
         $cd_ar = str_replace("slash","/",$cd_ar);
         $Id_DoTes = '0';
@@ -776,75 +708,7 @@ class AjaxController extends Controller{
         DB::update("Update dotes set dotes.reserved_1= 'RRRRRRRRRR' where dotes.id_dotes = '$Id_DoTes1'");
         DB::statement("exec asp_DO_End '$Id_DoTes1'");
     }
-    /* public function evadi_articolo2($Id_DoRig,$qtadaEvadere,$magazzino,$ubicazione,$lotto,$cd_cf,$documento,$cd_ar,$magazzino_A){
-         $cd_ar = str_replace("slash","/",$cd_ar);
-         $Id_DoTes = '';
-         if ($qtadaEvadere == '0') {
-             echo 'Impossibile evadere la Quantita a 0';
-             exit();
-         }
-         $controllo = DB::SELECT('SELECT * FROM DORIG WHERE Id_DORig = \''.$Id_DoRig.'\'')[0]->Id_DOTes;
-         $controlli = DB::SELECT('SELECT * FROM DORIG WHERE Id_DOTes = \''.$controllo.'\'');
-         $Id_DoTes_old = DB::SELECT('SELECT * from DoRig where id_dorig = \'' . $Id_DoRig . '\' ')[0]->Id_DOTes;
-         $listino = DB::SELECT('SELECT * from DOTes where Id_DOTes = \'' . $Id_DoTes_old . '\' ');
-         $insert_evasione['PrezzoUnitarioV'] =$controlli[0]->PrezzoUnitarioV;
-         if($listino[0]->Cd_LS_1 != null )
-             $listino = $listino[0]->Cd_LS_1;
-         else
-             $listino = '';
-         if($Id_DoTes == '' && $listino != '')
-             $Id_DoTes = DB::table('DOTes')->insertGetId(['Cd_CF' => $cd_cf, 'Cd_Do' => $documento,'Cd_LS_1'=>$listino]);
-         if($Id_DoTes == '' && $listino == '')
-             $Id_DoTes = DB::table('DOTes')->insertGetId(['Cd_CF' => $cd_cf, 'Cd_Do' => $documento]);
-         $pagamento = DB::SELECT('SELECT * FROM DOTes WHERE ID_DOTes = \''.$controllo.'\'');
-         if($pagamento[0]->Cd_PG != '') {
-             $pagamento = $pagamento[0]->Cd_PG;
-             DB::update("Update DOTes set Cd_PG = '$pagamento' where ID_DOTes = '$controllo'");
-         }
-         $agente = DB::SELECT('SELECT * FROM DOTes WHERE ID_DOTes = \''.$controllo.'\'');
-         if($agente[0]->Cd_Agente_1 != ''){
-             $agente = $agente[0]->Cd_Agente_1;
-             DB::update("Update DOTes set Cd_Agente_1 = '$agente' where ID_DOTes = '$controllo'");
-         }
-         if($magazzino_A != 0)
-             $insert_evasione['Cd_MG_A'] = $magazzino_A;
-         if($magazzino != 0)
-             $insert_evasione['Cd_MG_P'] = $magazzino;
 
-         if ($lotto != '0')
-             $insert_evasione['Cd_ARLotto'] = $lotto;
-         $Id_DoTes1 = $Id_DoTes;
-         $insert_evasione['Cd_AR'] = $cd_ar;
-         $insert_evasione['Id_DORig_Evade'] = $Id_DoRig;
-         $insert_evasione['Qta'] = $qtadaEvadere;
-         $insert_evasione['QtaEvasa'] = $insert_evasione['Qta'];
-         $Riga = DB::SELECT('SELECT * FROM DoRig where Id_DoRig=\'' . $Id_DoRig . '\'');
-         $insert_evasione['Cd_Aliquota'] = $Riga[0]->Cd_Aliquota;
-         $insert_evasione['PrezzoUnitarioV'] = $Riga[0]->PrezzoUnitarioV;
-         if($Riga[0]->ScontoRiga != '')
-             $insert_evasione['ScontoRiga'] = $Riga[0]->ScontoRiga;
-         $insert_evasione['Cd_CGConto'] = $Riga[0]->Cd_CGConto;
-         $insert_evasione['Id_DoTes'] = $Id_DoTes1;
-         $qta_evasa      = DB::SELECT('SELECT * FROM DORig WHERE Id_DoRig= \''.$Id_DoRig.'\' ')[0]->QtaEvasa;
-         $qta_evasa      = intval($qta_evasa)+intval($qtadaEvadere);
-         $qta_evadibile  = DB::SELECT('SELECT * FROM DORig WHERE Id_DoRig= \''.$Id_DoRig.'\' ')[0]->QtaEvadibile;
-         $qta_evadibile  = intval($qta_evadibile)-intval($qtadaEvadere);
-         DB::table('DoRig')->insertGetId($insert_evasione);
-         $Id_DoRig_OLD   = DB::SELECT('SELECT TOP 1 * FROM DORig ORDER BY Id_DORig DESC')[0]->Id_DORig;
-
-         if ($qtadaEvadere < $Riga[0]->QtaEvadibile) {
-             DB::UPDATE('Update DoRig set QtaEvadibile = \'' . $qta_evadibile . '\'WHERE Id_DoRig = \'' . $Id_DoRig . '\'');
-             DB::UPDATE('Update DoRig set QtaEvasa = \'' . $qta_evasa . '\'WHERE Id_DoRig = \'' . $Id_DoRig_OLD . '\'');
-         }else {
-             DB::UPDATE('Update DoRig set QtaEvadibile = \'0\'WHERE Id_DoRig = \''.$Id_DoRig.'\'');
-             DB::update('Update dorig set Evasa = \'1\'   where Id_DoRig = \'' . $Id_DoRig . '\' ');
-             DB::update("Update dotes set dotes.reserved_1= 'RRRRRRRRRR' where dotes.id_dotes = '$Id_DoTes_old'");
-             DB::statement("exec asp_DO_End '$Id_DoTes_old'");
-         }
-         DB::update("Update dotes set dotes.reserved_1= 'RRRRRRRRRR' where dotes.id_dotes = '$Id_DoTes1'");
-         DB::statement("exec asp_DO_End '$Id_DoTes1'");
-     }
- */
     public function evadi_articolo2($Id_DoRig){
         $Id_DoTes = '';
         $date = date('d/m/Y',strtotime('today')) ;
@@ -864,10 +728,10 @@ class AjaxController extends Controller{
             $ubicazione = '0';
             $lotto = $r->Cd_ARLotto;
             $cd_cf = $r->Cd_CF;
-            IF($r->Cd_DO = 'OAF')
-                $documento = 'DCF';
-            IF($r->Cd_DO = 'OVC')
-                $documento = 'DDT';
+            IF($r->Cd_DO = 'OC')
+                $documento = 'BO';
+            IF($r->Cd_DO = 'OF')
+                $documento = 'BC';
             $cd_ar = $r->Cd_AR;
             $magazzino_A = '00001'; //magazzino di default
             $magazzino = '00001'; //magazzino di default
@@ -932,7 +796,7 @@ class AjaxController extends Controller{
     public function crea_documento($cd_cf,$cd_do,$numero,$data){
 
         $fornitore = DB::SELECT('SELECT * FROM CF WHERE Cd_CF = \''.$cd_cf.'\' ');
-        if(sizeof($listino)> 0)
+        if(sizeof($fornitore)> 0)
             $listino = $fornitore[0]->Cd_LS_1;
         else
             $listino = 'BANCO';
@@ -940,19 +804,6 @@ class AjaxController extends Controller{
         $insert_testata_ordine['Cd_CF'] = $cd_cf;
         $insert_testata_ordine['Cd_Do'] = $cd_do;
         $insert_testata_ordine['NumeroDoc'] = $numero;
-        if($cd_do == 'DDT')
-            $insert_testata_ordine['Modificabile'] = 0 ;
-        if ($cd_do == 'DDT')
-        {
-            $insert_testata_ordine['Cd_DoSped'] = '02';
-            $insert_testata_ordine['Cd_DoPorto'] = '01';
-            $insert_testata_ordine['Cd_DoTrasporto'] = '001';
-            $insert_testata_ordine['Cd_DoAspBene'] = 'AV';
-            date_default_timezone_set('Europe/Rome');
-            $ora = date('d/m/Y h:i:s', strtotime('now'));
-            $insert_testata_ordine['TrasportoDataOra'] = $ora;
-        }
-        $insert_testata_ordine['Cd_CGConto_Banca'] = ($fornitore[0]->Cd_CGConto_Banca)? $fornitore[0]->Cd_CGConto_Banca:'';
         $data = str_replace('-','',$data);
         $insert_testata_ordine['DataDoc'] = $data;
         $Id_DoTes = DB::table('DOTes')->insertGetId($insert_testata_ordine);
@@ -974,10 +825,7 @@ class AjaxController extends Controller{
         $insert_testata_ordine['Cd_LS_1'] = $listino;
         $insert_testata_ordine['Cd_CF'] = $cd_cf;
         $insert_testata_ordine['Cd_Do'] = $cd_do;
-        $insert_testata_ordine['Cd_CGConto_Banca'] = ($fornitore[0]->Cd_CGConto_Banca)? $fornitore[0]->Cd_CGConto_Banca:'';
         $insert_testata_ordine['NumeroDoc'] = $numero;
-        if ($cd_do == 'DDT')
-            $insert_testata_ordine['Modificabile'] = 0;
         $data = str_replace('-', '', $data);
         $insert_testata_ordine['DataDoc'] = $data;
         if ($numero_rif != '0') {
@@ -986,16 +834,6 @@ class AjaxController extends Controller{
         }
         if ($data_rif != '0')
             $insert_testata_ordine['DataDocRif'] = $data_rif;
-        if ($cd_do == 'DDT')
-        {
-            $insert_testata_ordine['Cd_DoSped'] = '02';
-            $insert_testata_ordine['Cd_DoPorto'] = '01';
-            $insert_testata_ordine['Cd_DoTrasporto'] = '001';
-            $insert_testata_ordine['Cd_DoAspBene'] = 'AV';
-            date_default_timezone_set('Europe/Rome');
-            $ora = date('d/m/Y h:i:s', strtotime('now'));
-            $insert_testata_ordine['TrasportoDataOra'] = $ora;
-        }
         $Id_DoTes = DB::table('DOTes')->insertGetId($insert_testata_ordine);
         echo $Id_DoTes;
     }
@@ -1048,9 +886,12 @@ class AjaxController extends Controller{
 
         }
     */
-    public function cerca_articolo_smart($q,$cd_cf){
-        $q =  str_replace("slash","/",$q);
-        $qta='ND';/*
+    public function cerca_articolo_smart($q,$cd_cf)
+    {
+        $articoli = [];
+        $q = str_replace("slash", "/", $q);
+        $qta = 'ND';
+        if (substr($q,0,2) == '01') {
             $decoder = new Decoder($delimiter = '');
             $barcode = $decoder->decode($q);
             $where = ' where 1=1 ';
@@ -1061,8 +902,8 @@ class AjaxController extends Controller{
                     $where .= ' and AR.Cd_AR Like \'%' . $testo . '%\'';
                 }
                 if ($field['code'] == '310') {
-                    $decimali = floatval(substr($field['raw_content'],-2));
-                    $qta = floatval(substr($field['raw_content'],0,4))+$decimali/100;
+                    $decimali = floatval(substr($field['raw_content'], -2));
+                    $qta = floatval(substr($field['raw_content'], 0, 4)) + $decimali / 100;
                 }
                 if ($field['code'] == '10') {
                     $where .= ' and ARLotto.Cd_ARLotto Like \'%' . $field['content'] . '%\'';
@@ -1070,8 +911,8 @@ class AjaxController extends Controller{
 
             }
             $articoli = DB::select('SELECT AR.[Id_AR],AR.[Cd_AR],AR.[Descrizione],ARLotto.[Cd_ARLotto] FROM AR LEFT JOIN ARLotto on AR.Cd_AR = ARLotto.Cd_AR ' . $where . '  Order By Id_AR DESC');
-*/
-
+        }
+        if(sizeof($articoli) == 0)
         $articoli = DB::select('SELECT AR.[Id_AR],AR.[Cd_AR],AR.[Descrizione],ARLotto.[Cd_ARLotto] FROM AR LEFT JOIN ARLotto ON AR.Cd_AR = ARLotto.Cd_ARLotto LEFT JOIN ARAlias ON ARAlias.Cd_AR = AR.Cd_AR where AR.Cd_AR Like \''.$q.'%\' or  AR.Descrizione Like \'%'.$q.'%\' or AR.CD_AR IN (SELECT CD_AR from ARAlias where Alias LIKE \'%'.$q.'%\') Order By AR.Id_AR DESC');
         if(sizeof($articoli) > 0){
             $articolo = $articoli[0];
