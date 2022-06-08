@@ -271,14 +271,7 @@
 
                 <ul class="list-group">
 
-                    <li class="list-group-item">
-                        <a href="<?php echo URL::asset('magazzino/passivi') ?>" class="media">
-                            <div class="media-body">
-                                <h5>Ciclo Passivo</h5>
-                                <p>Effettua un Ordine di Carico di Magazzino </p>
-                            </div>
-                        </a>
-                    </li>
+
 
                     <li class="list-group-item">
                         <a href="<?php echo URL::asset('magazzino/attivo') ?>" class="media">
@@ -289,6 +282,14 @@
                         </a>
                     </li>
                 <!--
+                <li class="list-group-item">
+                        <a href="<?php echo URL::asset('magazzino/passivi') ?>" class="media">
+                            <div class="media-body">
+                                <h5>Ciclo Passivo</h5>
+                                <p>Effettua un Ordine di Carico di Magazzino </p>
+                            </div>
+                        </a>
+                    </li>
                     <li class="list-group-item">
                         <a href="<?php echo URL::asset('magazzino/altri') ?>" class="media">
                             <div class="media-body">

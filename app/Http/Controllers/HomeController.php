@@ -282,7 +282,7 @@ class HomeController extends Controller{
 
     public function attivo(){
 /* Cd_DO in (\'BO\',\'PRV\',\'PO\') and */
-        $documenti = DB::select('SELECT * FROM DO WHERE CliFor = \'C\'');
+        $documenti = DB::select('SELECT * FROM DO WHERE CliFor = \'C\' and Cd_DO in (\'BO\',\'PRV\',\'PO\')');
         return View::make('attivo',compact('documenti'));
     }
     /*
