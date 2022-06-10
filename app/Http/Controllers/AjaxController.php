@@ -982,6 +982,60 @@ class AjaxController extends Controller{
 
 
 
+    public function cerca_listino($barcode){
+
+        $articoli = DB::select('SELECT AR.[Id_AR],AR.[Cd_AR],AR.[Descrizione],ARLotto.[Cd_ARLotto] FROM AR LEFT JOIN ARLotto ON AR.Cd_AR = ARLotto.Cd_AR where AR.Cd_AR = \''.$barcode.'\' or  AR.Descrizione = \''.$barcode.'\' or AR.CD_AR IN (SELECT CD_AR from ARAlias where Alias = \''.$barcode.'\')  Order By AR.Id_AR DESC');
+
+
+        if(sizeof($articoli)=='0') {
+            $decoder = new Decoder($delimiter = '');
+            $barcode = $decoder->decode($barcode);
+            $where = ' where 1=1  ';
+
+            foreach ($barcode->toArray()['identifiers'] as $field) {
+
+                if ($field['code'] == '01') {
+                    $testo = trim($field['content'],'*,');
+                    $where .= ' and AR.Cd_AR Like \'%' . $testo . '%\'';
+
+                }
+                if ($field['code'] == '10') {
+                    $where .= ' and ARLotto.Cd_ARLotto Like \'%' . $field['content'] . '%\'';
+                    $Cd_ARLotto = $field['content'];
+                }
+
+            }
+            $articoli = DB::select('SELECT AR.[Id_AR],AR.[Cd_AR],AR.[Descrizione],ARLotto.[Cd_ARLotto] FROM AR LEFT JOIN ARLotto on AR.Cd_AR = ARLotto.Cd_AR ' . $where . '  Order By Id_AR DESC');
+
+        }
+        if(sizeof($articoli) > 0) {
+            $articolo = $articoli[0];
+
+            $quantita = 0;
+            $prezzo = DB::SELECT('SELECT * FROM LSArticolo WHERE Id_LSRevisione = 9 and Cd_AR = \''.$articolo->Cd_AR.'\'')[0];
+            /*
+            $disponibilita = DB::select('SELECT ISNULL(sum(QuantitaSign),0) as disponibilita from MGMOV where Cd_MGEsercizio = '.date('Y').' and Cd_AR = \'' . $articolo->Cd_AR . '\'');
+            if (sizeof($disponibilita) > 0) {
+                $quantita = floatval($disponibilita[0]->disponibilita);
+                $prova = DB::SELECT('SELECT ISNULL(sum(QuantitaSign),0) as disponibilita,Cd_ARLotto,Cd_MG from MGMOV where Cd_MGEsercizio = '.date('Y').' and Cd_AR = \'' . $articolo->Cd_AR . '\' and Cd_ARLotto IS NOT NULL group by Cd_ARLotto, Cd_MG HAVING SUM(QuantitaSign)!= 0  ');
+            }
+
+            /*  echo '<h3>Disponibilità: ' . $quantita . '</h3>';*/
+            ?>
+            <script type="text/javascript">
+                $('#modal_Cd_AR').val('<?php echo $articolo->Cd_AR ?>');
+                $('#modal_ls').val('00009');
+                $('#modal_prezzo').val('<?php echo $prezzo->Prezzo?>');
+
+
+            </script>
+        <?php }
+    }
+
+
+
+
+
     public function cerca_articolo_inventario($barcode){
 
         $articoli = DB::select('SELECT AR.[Id_AR],AR.[Cd_AR],AR.[Descrizione],ARLotto.[Cd_ARLotto] FROM AR LEFT JOIN ARLotto ON AR.Cd_AR = ARLotto.Cd_AR where AR.Cd_AR = \''.$barcode.'\' or  AR.Descrizione = \''.$barcode.'\' or AR.CD_AR IN (SELECT CD_AR from ARAlias where Alias = \''.$barcode.'\')  Order By AR.Id_AR DESC');

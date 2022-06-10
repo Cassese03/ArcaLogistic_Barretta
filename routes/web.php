@@ -74,6 +74,7 @@ Route::any('magazzino/scarico03_tot/{id_fornitore}/{cd_do}', 'HomeController@sca
 Route::any('magazzino/scarico04/{id_fornitore}/{id_dotes}', 'HomeController@scarico_magazzino04');
 */
 Route::any('magazzino/inventario', 'HomeController@inventario_magazzino');
+Route::any('magazzino/check', 'HomeController@check');
 Route::any('calcola_totali_ordine', 'HomeController@calcola_totali_ordine');
 
 Route::any('ajax/cerca_articolo/{q}', 'AjaxController@cerca_articolo');
@@ -87,6 +88,7 @@ Route::any('ajax/cerca_fornitore', 'AjaxController@cerca_fornitore');
 Route::any('ajax/cerca_cliente', 'AjaxController@cerca_cliente');
 
 Route::any('ajax/cerca_articolo_inventario/{barcode}', 'AjaxController@cerca_articolo_inventario');
+Route::any('ajax/cerca_listino/{barcode}', 'AjaxController@cerca_listino');
 Route::any('ajax/cerca_articolo_inventario_codice/{codice}/{arlotto}', 'AjaxController@cerca_articolo_inventario_codice');
 Route::any('ajax/rettifica_articolo/{codice}/{quantita}/{lotto}/{magazzino}', 'AjaxController@rettifica_articolo');
 Route::any('ajax/cerca_articolo_smart_inventario/{q}/{tipo}', 'AjaxController@cerca_articolo_smart_inventario');

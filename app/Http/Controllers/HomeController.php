@@ -1085,6 +1085,16 @@ class HomeController extends Controller{
         return View::make('inventario_magazzino');
     }
 
+    public function check(Request $request){
+
+        if(!session()->has('utente')) {
+            return Redirect::to('login');
+        }
+        $dati = $request->all();
+
+        return View::make('check');
+    }
+
     public function phpinfo(){
         phpinfo();
     }

@@ -345,6 +345,15 @@
                         </a>
                     </li>
 
+                    <li class="list-group-item">
+                        <a class="media" href="<?php echo URL::asset('magazzino/check') ?>" >
+                            <div class="media-body">
+                                <h5>Listini</h5>
+                                <p>Effettua una verifica per Listini</p>
+                            </div>
+                        </a>
+                    </li>
+
 
                 </ul>
 
